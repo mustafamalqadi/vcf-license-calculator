@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VMware VCF Licensing Cost Calculator — Compare legacy perpetual per-socket licensing vs. new Broadcom per-core subscription model. TCO analysis over 1-5 years.">
+    <meta property="og:title" content="VCF Licensing Cost Calculator — Broadcom vs. Legacy VMware">
+    <meta property="og:description" content="Interactive calculator comparing VMware perpetual per-socket licensing with Broadcom's new per-core subscription model for VCF and VVF.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mustafamalqadi.github.io/vcf-license-calculator/">
+    <meta name="theme-color" content="#0d1117">
+    <title>VCF Licensing Cost Calculator — Broadcom vs. Legacy VMware</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230d1117'/%3E%3Cpath d='M8 8h16v4H8z' fill='%2358a6ff' rx='2'/%3E%3Cpath d='M8 14h10v4H8z' fill='%233fb950' rx='2'/%3E%3Cpath d='M8 20h13v4H8z' fill='%23f97316' rx='2'/%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+:root{--bg-primary:#0d1117;--bg-secondary:#161b22;--bg-card:#1c2128;--bg-card-hover:#262c34;--accent:#58a6ff;--accent-light:#79c0ff;--success:#3fb950;--success-light:#56d364;--danger:#f85149;--danger-light:#ff7b72;--warning:#d29922;--warning-light:#e3b341;--purple:#a78bfa;--purple-light:#c4b5fd;--orange:#f97316;--orange-light:#fb923c;--text-primary:#e6edf3;--text-secondary:#8b949e;--text-muted:#6e7681;--border:#30363d;--shadow-sm:0 1px 3px rgba(0,0,0,.2);--shadow-md:0 4px 16px rgba(0,0,0,.25);--shadow-lg:0 12px 40px rgba(0,0,0,.35);--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--transition-fast:.15s cubic-bezier(.4,0,.2,1);--transition-base:.25s cubic-bezier(.4,0,.2,1)}
+[data-theme="light"]{--bg-primary:#ffffff;--bg-secondary:#f6f8fa;--bg-card:#ffffff;--bg-card-hover:#f3f4f6;--text-primary:#1f2937;--text-secondary:#4b5563;--text-muted:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-light:#3b82f6;--success:#16a34a;--success-light:#22c55e;--danger:#dc2626;--danger-light:#ef4444;--warning:#ca8a04;--warning-light:#eab308;--purple:#7c3aed;--purple-light:#8b5cf6;--orange:#ea580c;--orange-light:#f97316;--shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow-md:0 4px 16px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.7;min-height:100vh;-webkit-font-smoothing:antialiased}
+*:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+::selection{background:rgba(88,166,255,.2)}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg-secondary)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+
+/* Header */
+.header{background:rgba(13,17,23,.88);border-bottom:1px solid var(--border);padding:1rem 2rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
+[data-theme="light"] .header{background:rgba(255,255,255,.92)}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.header-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit}
+.header-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#fff}
+.header h1{font-size:1.05rem;font-weight:700;letter-spacing:-.02em}
+.header-actions{display:flex;gap:.5rem;align-items:center}
+.theme-toggle{background:none;border:1px solid var(--border);border-radius:8px;padding:.45rem .6rem;cursor:pointer;color:var(--text-secondary);transition:all var(--transition-fast);font-size:.85rem}
+.theme-toggle:hover{color:var(--accent);border-color:var(--accent)}
+.back-link{font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.35rem .7rem;border:1px solid var(--border);border-radius:6px;transition:all var(--transition-fast)}
+.back-link:hover{color:var(--accent);border-color:var(--accent)}
+
+/* Hero */
+.hero{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
+.hero h2{font-size:1.8rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem}
+.hero h2 span{background:linear-gradient(135deg,var(--accent),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--text-secondary);font-size:.9rem;max-width:650px;margin:0 auto}
+.hero-badges{display:flex;justify-content:center;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+.hero-badge{font-size:.7rem;padding:.3rem .7rem;border-radius:20px;border:1px solid var(--border);color:var(--text-secondary);background:var(--bg-secondary)}
+
+/* Main Grid */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem auto;max-width:1200px;padding:0 1.5rem}
+@media(max-width:900px){.calc-grid{grid-template-columns:1fr}}
+
+/* Input Panel */
+.input-panel{grid-column:1/-1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 2rem;box-shadow:var(--shadow-sm)}
+.input-panel h3{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.input-group{display:flex;flex-direction:column;gap:.3rem}
+.input-group label{font-size:.72rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.03em}
+.input-group input,.input-group select{padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--text-primary);font-size:.85rem;transition:border-color var(--transition-fast)}
+.input-group input:focus,.input-group select:focus{border-color:var(--accent);outline:none}
+.input-group .input-hint{font-size:.65rem;color:var(--text-muted);margin-top:.15rem}
+
+/* Section Cards */
+.section-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 2rem;box-shadow:var(--shadow-sm);transition:all var(--transition-base)}
+.section-card:hover{box-shadow:var(--shadow-md)}
+.section-card h3{font-size:.95rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.section-card.legacy{border-top:3px solid var(--purple)}
+.section-card.broadcom{border-top:3px solid var(--orange)}
+.section-card.comparison{border-top:3px solid var(--success);grid-column:1/-1}
+
+/* Cost Breakdown */
+.cost-line{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(48,54,61,.5);font-size:.82rem}
+.cost-line:last-child{border-bottom:none}
+.cost-line .cl-label{color:var(--text-secondary);display:flex;align-items:center;gap:.4rem}
+.cost-line .cl-value{font-weight:700;font-family:'JetBrains Mono',monospace}
+.cost-line.total{border-top:2px solid var(--border);margin-top:.5rem;padding-top:.75rem;font-size:.9rem}
+.cost-line.total .cl-label{color:var(--text-primary);font-weight:700}
+.cost-line.total .cl-value{font-size:1rem}
+.cost-line .cl-value.savings{color:var(--success)}
+.cost-line .cl-value.increase{color:var(--danger)}
+
+/* TCO Chart */
+.tco-chart{margin-top:1.5rem;padding:1.25rem;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-secondary)}
+.tco-chart h4{font-size:.82rem;font-weight:700;margin-bottom:.75rem;color:var(--text-secondary)}
+.chart-bars{display:flex;flex-direction:column;gap:.6rem}
+.chart-row{display:grid;grid-template-columns:60px 1fr 80px;align-items:center;gap:.6rem;font-size:.75rem}
+.chart-row .cr-label{color:var(--text-muted);font-weight:600}
+.chart-row .cr-bar{height:28px;border-radius:6px;position:relative;display:flex;align-items:center}
+.chart-row .cr-bar .bar-fill{height:100%;border-radius:6px;transition:width .6s ease;min-width:4px}
+.chart-row .cr-bar .bar-fill.legacy{background:linear-gradient(90deg,var(--purple),var(--purple-light))}
+.chart-row .cr-bar .bar-fill.broadcom{background:linear-gradient(90deg,var(--orange),var(--orange-light))}
+.chart-row .cr-value{font-weight:700;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.72rem}
+.chart-legend{display:flex;gap:1.5rem;margin-top:.75rem;font-size:.7rem;color:var(--text-muted)}
+.chart-legend span{display:flex;align-items:center;gap:.35rem}
+.chart-legend .dot{width:10px;height:10px;border-radius:3px}
+.chart-legend .dot.legacy{background:var(--purple)}
+.chart-legend .dot.broadcom{background:var(--orange)}
+
+/* Verdict Banner */
+.verdict{margin:1.5rem auto;max-width:1200px;padding:1.25rem 2rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;gap:1rem;font-size:.85rem}
+.verdict.cheaper-legacy{border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)}
+.verdict.cheaper-broadcom{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.04)}
+.verdict-icon{font-size:1.5rem}
+.verdict-text{flex:1}
+.verdict-text strong{display:block;font-size:.9rem;margin-bottom:.15rem}
+.verdict-text span{color:var(--text-secondary);font-size:.78rem}
+.verdict-pct{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.verdict.cheaper-legacy .verdict-pct{color:var(--purple)}
+.verdict.cheaper-broadcom .verdict-pct{color:var(--orange)}
+
+/* Info Box */
+.info-box{margin:1.5rem auto;max-width:1200px;padding:1.25rem 1.5rem;border-radius:var(--radius-md);border:1px solid rgba(88,166,255,.2);background:rgba(88,166,255,.04);font-size:.78rem;color:var(--text-secondary);line-height:1.8}
+.info-box h4{font-size:.82rem;font-weight:700;color:var(--accent-light);margin-bottom:.4rem}
+.info-box ul{padding-left:1.2rem;margin-top:.3rem}
+.info-box li{margin:.2rem 0}
+
+/* Scenario Presets */
+.presets{margin:1.5rem auto 0;max-width:1200px;padding:0 1.5rem}
+.presets h4{font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.04em}
+.preset-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+.preset-btn{padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-secondary);font-size:.72rem;font-weight:600;cursor:pointer;transition:all var(--transition-fast)}
+.preset-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(88,166,255,.05)}
+.preset-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(88,166,255,.08)}
+
+/* Notes Section */
+.notes{max-width:1200px;margin:2rem auto;padding:0 1.5rem}
+.notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:700px){.notes-grid{grid-template-columns:1fr}}
+.note-card{padding:1rem 1.25rem;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);font-size:.75rem;color:var(--text-secondary)}
+.note-card h5{font-size:.78rem;font-weight:700;color:var(--text-primary);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.note-card ul{padding-left:1rem;margin-top:.3rem}
+.note-card li{margin:.2rem 0}
+
+/* Footer */
+.footer{text-align:center;padding:2rem 1.5rem;border-top:1px solid var(--border);margin-top:2rem;font-size:.72rem;color:var(--text-muted)}
+.footer a{color:var(--accent);text-decoration:none}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);opacity:0;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.6rem 1.2rem;font-size:.78rem;font-weight:500;box-shadow:var(--shadow-lg);transition:all .3s ease;z-index:999;pointer-events:none}
+.toast.visible{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media(max-width:600px){
+    .hero h2{font-size:1.3rem}
+    .input-grid{grid-template-columns:1fr 1fr}
+    .calc-grid{padding:0 1rem}
+    .section-card{padding:1.25rem 1.25rem}
+}
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-inner">
+        <a class="header-brand" href="#">
+            <div class="header-logo">$</div>
+            <h1>VCF License Calculator</h1>
+        </a>
+        <div class="header-actions">
+            <a class="back-link" href="https://mustafamalqadi.github.io/">&#8592; Portfolio</a>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">&#9681;</button>
+        </div>
+    </div>
+</div>
+
+<section class="hero">
+    <h2>VMware Licensing <span>Cost Comparison</span></h2>
+    <p>Compare legacy VMware perpetual per-socket licensing vs. Broadcom's new per-core subscription model (VCF/VVF). Understand the true TCO impact.</p>
+    <div class="hero-badges">
+        <span class="hero-badge">Per-Socket vs Per-Core</span>
+        <span class="hero-badge">VCF &amp; VVF Bundles</span>
+        <span class="hero-badge">1-5 Year TCO</span>
+        <span class="hero-badge">Perpetual vs Subscription</span>
+    </div>
+</section>
+
+<div class="presets">
+    <h4>Quick Scenarios</h4>
+    <div class="preset-btns">
+        <button class="preset-btn" onclick="applyPreset('smb')">SMB (2 hosts / 32 cores)</button>
+        <button class="preset-btn" onclick="applyPreset('mid')">Mid-Size (8 hosts / 256 cores)</button>
+        <button class="preset-btn" onclick="applyPreset('enterprise')">Enterprise (32 hosts / 1024 cores)</button>
+        <button class="preset-btn" onclick="applyPreset('large')">Large DC (64 hosts / 2048 cores)</button>
+        <button class="preset-btn" onclick="applyPreset('hci')">HCI Cluster (4 hosts / 128 cores)</button>
+    </div>
+</div>
+
+<div class="input-panel" style="max-width:1200px;margin:1.5rem auto;padding:1.75rem 2rem">
+    <h3>&#9881; Environment Configuration</h3>
+    <div class="input-grid">
+        <div class="input-group">
+            <label>Number of Hosts</label>
+            <input type="number" id="numHosts" min="1" max="500" value="8" oninput="calculate()">
+            <span class="input-hint">Physical ESXi servers</span>
+        </div>
+        <div class="input-group">
+            <label>Sockets per Host</label>
+            <select id="socketsPerHost" onchange="calculate()">
+                <option value="1">1 Socket</option>
+                <option value="2" selected>2 Sockets</option>
+                <option value="4">4 Sockets</option>
+            </select>
+            <span class="input-hint">CPU sockets per server</span>
+        </div>
+        <div class="input-group">
+            <label>Cores per Socket</label>
+            <select id="coresPerSocket" onchange="calculate()">
+                <option value="8">8 cores</option>
+                <option value="12">12 cores</option>
+                <option value="16" selected>16 cores</option>
+                <option value="20">20 cores</option>
+                <option value="24">24 cores</option>
+                <option value="28">28 cores</option>
+                <option value="32">32 cores</option>
+                <option value="36">36 cores</option>
+                <option value="40">40 cores</option>
+                <option value="48">48 cores</option>
+                <option value="56">56 cores</option>
+                <option value="64">64 cores</option>
+                <option value="96">96 cores</option>
+                <option value="128">128 cores</option>
+            </select>
+            <span class="input-hint">Physical cores per CPU</span>
+        </div>
+        <div class="input-group">
+            <label>Legacy Edition</label>
+            <select id="legacyEdition" onchange="calculate()">
+                <option value="std">vSphere Standard</option>
+                <option value="entplus" selected>vSphere Enterprise Plus</option>
+                <option value="entplus_vsan">Enterprise Plus + vSAN</option>
+                <option value="entplus_vsan_nsx">Enterprise Plus + vSAN + NSX</option>
+            </select>
+            <span class="input-hint">Previous VMware licensing tier</span>
+        </div>
+        <div class="input-group">
+            <label>Broadcom Bundle</label>
+            <select id="broadcomBundle" onchange="calculate()">
+                <option value="vvf">VMware vSphere Foundation (VVF)</option>
+                <option value="vcf" selected>VMware Cloud Foundation (VCF)</option>
+            </select>
+            <span class="input-hint">New subscription tier</span>
+        </div>
+        <div class="input-group">
+            <label>Comparison Period</label>
+            <select id="years" onchange="calculate()">
+                <option value="1">1 Year</option>
+                <option value="3" selected>3 Years</option>
+                <option value="5">5 Years</option>
+            </select>
+            <span class="input-hint">TCO comparison window</span>
+        </div>
+        <div class="input-group">
+            <label>Support Level</label>
+            <select id="supportLevel" onchange="calculate()">
+                <option value="production" selected>Production (24/7)</option>
+                <option value="basic">Basic (12/5)</option>
+            </select>
+            <span class="input-hint">SnS / subscription support tier</span>
+        </div>
+        <div class="input-group">
+            <label>Min. Cores per CPU</label>
+            <select id="minCores" onchange="calculate()">
+                <option value="16" selected>16 (Broadcom minimum)</option>
+                <option value="0">Actual cores (no minimum)</option>
+            </select>
+            <span class="input-hint">Broadcom charges min 16 cores/socket</span>
+        </div>
+    </div>
+</div>
+
+<div id="verdict" class="verdict" style="max-width:1200px;display:none"></div>
+
+<div class="calc-grid">
+    <div class="section-card legacy">
+        <h3><span style="color:var(--purple)">&#9632;</span> Legacy VMware (Perpetual + SnS)</h3>
+        <div id="legacyCosts"></div>
+    </div>
+    <div class="section-card broadcom">
+        <h3><span style="color:var(--orange)">&#9632;</span> Broadcom Subscription (Per-Core)</h3>
+        <div id="broadcomCosts"></div>
+    </div>
+    <div class="section-card comparison">
+        <h3>&#128200; TCO Comparison Over Time</h3>
+        <div id="tcoComparison"></div>
+        <div class="tco-chart">
+            <h4>Annual Cost Visualization</h4>
+            <div id="chartBars" class="chart-bars"></div>
+            <div class="chart-legend">
+                <span><span class="dot legacy"></span> Legacy (Perpetual + SnS)</span>
+                <span><span class="dot broadcom"></span> Broadcom (Subscription)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="info-box" style="max-width:1200px;margin:1.5rem auto;padding:1.25rem 1.5rem">
+    <h4>&#9432; Understanding the Licensing Change</h4>
+    <ul>
+        <li><strong>Old model (Pre-2024):</strong> Pay once for perpetual license per CPU socket + annual Support & Subscription (SnS) renewal (~20-25% of license cost). You "own" the license forever.</li>
+        <li><strong>New model (Broadcom, 2024+):</strong> Subscription-only per physical core. No perpetual option. Minimum 16 cores billed per socket even if CPU has fewer. Two bundles: VCF (full stack) and VVF (vSphere + vSAN only).</li>
+        <li><strong>VVF (vSphere Foundation):</strong> Includes vSphere Enterprise Plus + vSAN Enterprise. Replaces buying these separately.</li>
+        <li><strong>VCF (Cloud Foundation):</strong> Includes vSphere + vSAN + NSX + Aria Suite. Full SDDC stack as a single subscription.</li>
+        <li><strong>Key impact:</strong> Customers with high core-count CPUs (32+ cores) see the biggest cost increase. Customers who already licensed NSX + vSAN separately may find VCF competitive.</li>
+    </ul>
+</div>
+
+<div class="notes">
+    <div class="notes-grid">
+        <div class="note-card">
+            <h5>&#9888;&#65039; Disclaimer</h5>
+            <ul>
+                <li>Prices are estimates based on publicly available list prices and industry reports</li>
+                <li>Actual pricing varies by region, partner discounts, ELA agreements, and negotiation</li>
+                <li>Broadcom pricing is not publicly listed — estimates based on industry analyst data (2024-2025 reports)</li>
+                <li>This tool is for planning and comparison purposes only</li>
+            </ul>
+        </div>
+        <div class="note-card">
+            <h5>&#128218; Sources & References</h5>
+            <ul>
+                <li>VMware Price List (historical, pre-Broadcom)</li>
+                <li>Broadcom VCF/VVF packaging announcements (2024)</li>
+                <li>Industry analyst reports (Gartner, IDC, Forrester)</li>
+                <li>Community-reported pricing from VMware User Group (VMUG) discussions</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>Built by <a href="https://mustafamalqadi.github.io/">Eng. Mustafa Al-Qadi</a> &mdash; VCF Licensing Cost Calculator &mdash; For educational and planning purposes only</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){'use strict';
+
+// ---- Pricing Data (USD List Prices — Estimates) ----
+// Legacy VMware perpetual per-socket prices (pre-Broadcom, approximate list)
+var LEGACY_PRICES = {
+    // Per socket, one-time license cost
+    license: {
+        std: 995,          // vSphere Standard
+        entplus: 4595,     // vSphere Enterprise Plus
+        vsan_std: 2495,    // vSAN Standard (addon)
+        vsan_ent: 5495,    // vSAN Enterprise (addon)
+        nsx_pro: 4150,     // NSX Advanced/Enterprise per socket
+        nsx_ent: 6995      // NSX Enterprise Plus per socket
+    },
+    // Annual SnS as % of license
+    sns_pct: {
+        production: 0.25,  // 24/7 Production Support
+        basic: 0.20        // Basic 12/5 Support
+    }
+};
+
+// Broadcom per-core subscription prices (annual, estimated from analyst data)
+var BROADCOM_PRICES = {
+    // Per core, per year
+    vcf: {
+        production: 245,   // VCF with 24/7 Production support
+        basic: 210         // VCF with Basic support
+    },
+    vvf: {
+        production: 138,   // VVF with 24/7 Production support
+        basic: 118         // VVF with Basic support
+    }
+};
+
+// Minimum cores per socket (Broadcom policy)
+var MIN_CORES = 16;
+
+// ---- Presets ----
+var PRESETS = {
+    smb: { hosts: 2, sockets: 2, cores: 16, legacy: 'entplus', bundle: 'vvf', years: 3, support: 'basic', minCores: '16' },
+    mid: { hosts: 8, sockets: 2, cores: 16, legacy: 'entplus_vsan', bundle: 'vcf', years: 3, support: 'production', minCores: '16' },
+    enterprise: { hosts: 32, sockets: 2, cores: 16, legacy: 'entplus_vsan_nsx', bundle: 'vcf', years: 5, support: 'production', minCores: '16' },
+    large: { hosts: 64, sockets: 2, cores: 16, legacy: 'entplus_vsan_nsx', bundle: 'vcf', years: 5, support: 'production', minCores: '16' },
+    hci: { hosts: 4, sockets: 2, cores: 16, legacy: 'entplus_vsan', bundle: 'vcf', years: 3, support: 'production', minCores: '16' }
+};
+
+window.applyPreset = function(key) {
+    var p = PRESETS[key];
+    document.getElementById('numHosts').value = p.hosts;
+    document.getElementById('socketsPerHost').value = p.sockets;
+    document.getElementById('coresPerSocket').value = p.cores;
+    document.getElementById('legacyEdition').value = p.legacy;
+    document.getElementById('broadcomBundle').value = p.bundle;
+    document.getElementById('years').value = p.years;
+    document.getElementById('supportLevel').value = p.support;
+    document.getElementById('minCores').value = p.minCores;
+    // Highlight active preset
+    document.querySelectorAll('.preset-btn').forEach(function(b){ b.classList.remove('active'); });
+    event.target.classList.add('active');
+    calculate();
+};
+
+function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+}
+
+function calculate() {
+    var hosts = parseInt(document.getElementById('numHosts').value) || 1;
+    var sockets = parseInt(document.getElementById('socketsPerHost').value) || 2;
+    var cores = parseInt(document.getElementById('coresPerSocket').value) || 16;
+    var legacyEdition = document.getElementById('legacyEdition').value;
+    var bundle = document.getElementById('broadcomBundle').value;
+    var years = parseInt(document.getElementById('years').value) || 3;
+    var support = document.getElementById('supportLevel').value;
+    var minCores = parseInt(document.getElementById('minCores').value);
+
+    var totalSockets = hosts * sockets;
+    var actualCoresPerSocket = cores;
+    var billedCoresPerSocket = minCores > 0 ? Math.max(cores, minCores) : cores;
+    var totalBilledCores = hosts * sockets * billedCoresPerSocket;
+    var totalActualCores = hosts * sockets * actualCoresPerSocket;
+
+    // ---- LEGACY CALCULATION ----
+    var legacyLicense = 0;
+    var legacyComponents = [];
+
+    if (legacyEdition === 'std') {
+        legacyLicense = LEGACY_PRICES.license.std * totalSockets;
+        legacyComponents.push({ label: 'vSphere Standard (' + totalSockets + ' sockets)', value: legacyLicense });
+    } else if (legacyEdition === 'entplus') {
+        legacyLicense = LEGACY_PRICES.license.entplus * totalSockets;
+        legacyComponents.push({ label: 'vSphere Enterprise Plus (' + totalSockets + ' sockets)', value: legacyLicense });
+    } else if (legacyEdition === 'entplus_vsan') {
+        var vsphere = LEGACY_PRICES.license.entplus * totalSockets;
+        var vsan = LEGACY_PRICES.license.vsan_ent * totalSockets;
+        legacyLicense = vsphere + vsan;
+        legacyComponents.push({ label: 'vSphere Enterprise Plus (' + totalSockets + ' sockets)', value: vsphere });
+        legacyComponents.push({ label: 'vSAN Enterprise (' + totalSockets + ' sockets)', value: vsan });
+    } else if (legacyEdition === 'entplus_vsan_nsx') {
+        var vsphere = LEGACY_PRICES.license.entplus * totalSockets;
+        var vsan = LEGACY_PRICES.license.vsan_ent * totalSockets;
+        var nsx = LEGACY_PRICES.license.nsx_ent * totalSockets;
+        legacyLicense = vsphere + vsan + nsx;
+        legacyComponents.push({ label: 'vSphere Enterprise Plus (' + totalSockets + ' sockets)', value: vsphere });
+        legacyComponents.push({ label: 'vSAN Enterprise (' + totalSockets + ' sockets)', value: vsan });
+        legacyComponents.push({ label: 'NSX Enterprise (' + totalSockets + ' sockets)', value: nsx });
+    }
+
+    var snsPct = LEGACY_PRICES.sns_pct[support];
+    var annualSns = legacyLicense * snsPct;
+    var legacyYear1 = legacyLicense + annualSns;
+    var legacyAnnualOngoing = annualSns; // Subsequent years = SnS only
+    var legacyTotalTCO = legacyYear1 + (annualSns * (years - 1));
+
+    // ---- BROADCOM CALCULATION ----
+    var corePrice = BROADCOM_PRICES[bundle][support];
+    var annualBroadcom = totalBilledCores * corePrice;
+    var broadcomTotalTCO = annualBroadcom * years;
+
+    // ---- RENDER LEGACY ----
+    var legacyHtml = '';
+    legacyComponents.forEach(function(c) {
+        legacyHtml += '<div class="cost-line"><span class="cl-label">' + c.label + '</span><span class="cl-value">' + fmt(c.value) + '</span></div>';
+    });
+    legacyHtml += '<div class="cost-line"><span class="cl-label">&#128176; Total Perpetual License (one-time)</span><span class="cl-value">' + fmt(legacyLicense) + '</span></div>';
+    legacyHtml += '<div class="cost-line"><span class="cl-label">&#128197; Annual SnS (' + (snsPct * 100) + '% of license)</span><span class="cl-value">' + fmt(annualSns) + '/yr</span></div>';
+    legacyHtml += '<div class="cost-line"><span class="cl-label">&#128196; Year 1 Total (License + SnS)</span><span class="cl-value">' + fmt(legacyYear1) + '</span></div>';
+    legacyHtml += '<div class="cost-line total"><span class="cl-label">&#128178; ' + years + '-Year TCO</span><span class="cl-value">' + fmt(legacyTotalTCO) + '</span></div>';
+    document.getElementById('legacyCosts').innerHTML = legacyHtml;
+
+    // ---- RENDER BROADCOM ----
+    var bundleLabel = bundle === 'vcf' ? 'VMware Cloud Foundation (VCF)' : 'vSphere Foundation (VVF)';
+    var broadcomHtml = '';
+    broadcomHtml += '<div class="cost-line"><span class="cl-label">Bundle: ' + bundleLabel + '</span><span class="cl-value">' + fmt(corePrice) + '/core/yr</span></div>';
+    broadcomHtml += '<div class="cost-line"><span class="cl-label">Actual cores: ' + totalActualCores + ' (' + hosts + '×' + sockets + '×' + actualCoresPerSocket + ')</span><span class="cl-value"></span></div>';
+    if (billedCoresPerSocket > actualCoresPerSocket) {
+        broadcomHtml += '<div class="cost-line"><span class="cl-label">&#9888;&#65039; Billed cores: ' + totalBilledCores + ' (min ' + minCores + '/socket applies)</span><span class="cl-value increase">+' + (totalBilledCores - totalActualCores) + ' cores</span></div>';
+    } else {
+        broadcomHtml += '<div class="cost-line"><span class="cl-label">Billed cores: ' + totalBilledCores + '</span><span class="cl-value">' + totalBilledCores + ' cores</span></div>';
+    }
+    broadcomHtml += '<div class="cost-line"><span class="cl-label">&#128197; Annual Subscription</span><span class="cl-value">' + fmt(annualBroadcom) + '/yr</span></div>';
+    broadcomHtml += '<div class="cost-line total"><span class="cl-label">&#128178; ' + years + '-Year TCO</span><span class="cl-value">' + fmt(broadcomTotalTCO) + '</span></div>';
+    document.getElementById('broadcomCosts').innerHTML = broadcomHtml;
+
+    // ---- TCO COMPARISON ----
+    var diff = broadcomTotalTCO - legacyTotalTCO;
+    var pctDiff = legacyTotalTCO > 0 ? ((diff / legacyTotalTCO) * 100) : 0;
+    var compHtml = '';
+    compHtml += '<div class="cost-line"><span class="cl-label">Legacy ' + years + '-Year TCO</span><span class="cl-value">' + fmt(legacyTotalTCO) + '</span></div>';
+    compHtml += '<div class="cost-line"><span class="cl-label">Broadcom ' + years + '-Year TCO</span><span class="cl-value">' + fmt(broadcomTotalTCO) + '</span></div>';
+    compHtml += '<div class="cost-line total"><span class="cl-label">Difference (' + years + ' years)</span><span class="cl-value ' + (diff > 0 ? 'increase' : 'savings') + '">' + (diff > 0 ? '+' : '') + fmt(diff) + ' (' + (diff > 0 ? '+' : '') + pctDiff.toFixed(0) + '%)</span></div>';
+
+    // Per-year breakdown
+    compHtml += '<div style="margin-top:1rem;font-size:.72rem;color:var(--text-muted)"><strong>Year-by-Year Breakdown:</strong></div>';
+    var legacyCum = 0, broadcomCum = 0;
+    for (var y = 1; y <= years; y++) {
+        var lCost = y === 1 ? legacyYear1 : annualSns;
+        legacyCum += lCost;
+        broadcomCum += annualBroadcom;
+        compHtml += '<div class="cost-line"><span class="cl-label">Year ' + y + '</span><span class="cl-value" style="font-size:.72rem">Legacy: ' + fmt(lCost) + ' | Broadcom: ' + fmt(annualBroadcom) + '</span></div>';
+    }
+    document.getElementById('tcoComparison').innerHTML = compHtml;
+
+    // ---- CHART ----
+    var maxVal = Math.max(legacyYear1, annualBroadcom, annualSns);
+    var chartHtml = '';
+    chartHtml += '<div class="chart-row"><span class="cr-label">Year 1</span><div class="cr-bar"><div class="bar-fill legacy" style="width:' + ((legacyYear1 / maxVal) * 100) + '%"></div></div><span class="cr-value">' + fmt(legacyYear1) + '</span></div>';
+    chartHtml += '<div class="chart-row"><span class="cr-label"></span><div class="cr-bar"><div class="bar-fill broadcom" style="width:' + ((annualBroadcom / maxVal) * 100) + '%"></div></div><span class="cr-value">' + fmt(annualBroadcom) + '</span></div>';
+    if (years > 1) {
+        chartHtml += '<div class="chart-row"><span class="cr-label">Year 2+</span><div class="cr-bar"><div class="bar-fill legacy" style="width:' + ((annualSns / maxVal) * 100) + '%"></div></div><span class="cr-value">' + fmt(annualSns) + '/yr</span></div>';
+        chartHtml += '<div class="chart-row"><span class="cr-label"></span><div class="cr-bar"><div class="bar-fill broadcom" style="width:' + ((annualBroadcom / maxVal) * 100) + '%"></div></div><span class="cr-value">' + fmt(annualBroadcom) + '/yr</span></div>';
+    }
+    // Total bars
+    chartHtml += '<div class="chart-row" style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)"><span class="cr-label">' + years + '-Yr Total</span><div class="cr-bar"><div class="bar-fill legacy" style="width:' + ((legacyTotalTCO / Math.max(legacyTotalTCO, broadcomTotalTCO)) * 100) + '%"></div></div><span class="cr-value">' + fmt(legacyTotalTCO) + '</span></div>';
+    chartHtml += '<div class="chart-row"><span class="cr-label"></span><div class="cr-bar"><div class="bar-fill broadcom" style="width:' + ((broadcomTotalTCO / Math.max(legacyTotalTCO, broadcomTotalTCO)) * 100) + '%"></div></div><span class="cr-value">' + fmt(broadcomTotalTCO) + '</span></div>';
+    document.getElementById('chartBars').innerHTML = chartHtml;
+
+    // ---- VERDICT ----
+    var verdictDiv = document.getElementById('verdict');
+    verdictDiv.style.display = 'flex';
+    if (diff > 0) {
+        verdictDiv.className = 'verdict cheaper-legacy';
+        verdictDiv.innerHTML = '<span class="verdict-icon">&#128184;</span><div class="verdict-text"><strong>Legacy perpetual licensing is cheaper over ' + years + ' years</strong><span>Broadcom subscription costs ' + fmt(Math.abs(diff)) + ' more over this period. However, legacy perpetual licenses are no longer available for new purchases.</span></div><span class="verdict-pct">+' + Math.abs(pctDiff).toFixed(0) + '%</span>';
+    } else if (diff < 0) {
+        verdictDiv.className = 'verdict cheaper-broadcom';
+        verdictDiv.innerHTML = '<span class="verdict-icon">&#127942;</span><div class="verdict-text"><strong>Broadcom subscription is cheaper over ' + years + ' years</strong><span>The new per-core model saves ' + fmt(Math.abs(diff)) + ' compared to legacy perpetual + SnS for your configuration.</span></div><span class="verdict-pct">-' + Math.abs(pctDiff).toFixed(0) + '%</span>';
+    } else {
+        verdictDiv.className = 'verdict';
+        verdictDiv.innerHTML = '<span class="verdict-icon">&#9878;</span><div class="verdict-text"><strong>Both models cost approximately the same</strong><span>For your configuration, the TCO difference is negligible.</span></div><span class="verdict-pct">0%</span>';
+    }
+}
+
+// ---- Theme ----
+window.toggleTheme = function() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', current === 'light' ? '' : 'light');
+    localStorage.setItem('vcf-calc-theme', current === 'light' ? 'dark' : 'light');
+};
+
+// Load theme
+(function() {
+    var saved = localStorage.getItem('vcf-calc-theme');
+    if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+})();
+
+// Initial calculation
+calculate();
+
+})();
+</script>
+</body>
+</html>
