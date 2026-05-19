@@ -48,8 +48,11 @@ body{font-family:'Cairo','Inter',system-ui,sans-serif;background:var(--bg-primar
 [data-theme="light"] .header{background:rgba(255,255,255,.92)}
 .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
 .header-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit}
-.header-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#fff}
-.header h1{font-size:1.05rem;font-weight:700;letter-spacing:-.02em}
+.header-logo{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--orange));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#fff}
+.header-brand:hover .header-logo{transform:rotate(-5deg) scale(1.05)}
+.brand-text{display:flex;flex-direction:column}
+.brand-name{font-size:.85rem;font-weight:700;letter-spacing:-.02em}
+.brand-subtitle{font-size:.65rem;color:var(--text-muted);font-weight:400}
 .header-actions{display:flex;gap:.5rem;align-items:center}
 .theme-toggle{background:none;border:1px solid var(--border);border-radius:8px;padding:.45rem .6rem;cursor:pointer;color:var(--text-secondary);transition:all var(--transition-fast);font-size:.85rem}
 .theme-toggle:hover{color:var(--accent);border-color:var(--accent)}
@@ -228,12 +231,16 @@ body{font-family:'Cairo','Inter',system-ui,sans-serif;background:var(--bg-primar
 <div class="header">
     <div class="header-inner">
         <a class="header-brand" href="#">
-            <div class="header-logo">$</div>
-            <h1>VCF License Calculator</h1>
+            <div class="header-logo">M.Q</div>
+            <div class="brand-text">
+                <span class="brand-name">Eng. Mustafa Al-Qadi</span>
+                <span class="brand-subtitle">VCF License Calculator</span>
+            </div>
         </a>
         <div class="header-actions">
-            <a class="back-link" href="https://mustafamalqadi.github.io/">&#8592; Portfolio</a>
-            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">&#9681;</button>
+            <a class="back-link" href="https://mustafamalqadi.github.io/">&#8592; Home</a>
+            <a class="back-link" href="https://mustafamalqadi.github.io/vmware-kbs/">KB Portal</a>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">&#127769;</button>
         </div>
     </div>
 </div>
