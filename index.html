@@ -19,7 +19,7 @@
 html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.7;min-height:100vh;-webkit-font-smoothing:antialiased}
 *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-::selection{background:rgba(88,166,255,.2)}
+::selection{background:rgba(59,130,246,.2)}
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:var(--bg-secondary)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
@@ -27,7 +27,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
 
 /* Header */
-.header{background:rgba(13,17,23,.88);border-bottom:1px solid var(--border);padding:1rem 2rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
+.header{background:rgba(9,13,26,.88);border-bottom:1px solid var(--border);padding:1rem 2rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
 [data-theme="light"] .header{background:rgba(255,255,255,.92)}
 .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
 .header-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit}
@@ -40,7 +40,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .back-link:hover{color:var(--accent);border-color:var(--accent)}
 
 /* Hero */
-.hero{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
+.hero{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(59,130,246,.06) 0%,rgba(249,115,22,.03) 30%,transparent 70%);pointer-events:none;z-index:0}
+.hero>*{position:relative;z-index:1}
 .hero h2{font-size:1.8rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem}
 .hero h2 span{background:linear-gradient(135deg,var(--accent),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero p{color:var(--text-secondary);font-size:.9rem;max-width:650px;margin:0 auto}
@@ -98,7 +100,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .chart-legend .dot.broadcom{background:var(--orange)}
 
 /* Verdict Banner */
-.verdict{margin:1.5rem auto;max-width:1200px;padding:1.25rem 2rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;gap:1rem;font-size:.85rem}
+.verdict{margin:1.5rem auto;max-width:1200px;padding:1.25rem 2rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;gap:1rem;font-size:.85rem;transition:all .4s ease;animation:verdict-in .4s ease}
 .verdict.cheaper-legacy{border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)}
 .verdict.cheaper-broadcom{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.04)}
 .verdict-icon{font-size:1.5rem}
@@ -108,6 +110,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 .verdict-pct{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono',monospace}
 .verdict.cheaper-legacy .verdict-pct{color:var(--purple)}
 .verdict.cheaper-broadcom .verdict-pct{color:var(--orange)}
+@keyframes verdict-in{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
 /* Info Box */
 .info-box{margin:1.5rem auto;max-width:1200px;padding:1.25rem 1.5rem;border-radius:var(--radius-md);border:1px solid rgba(88,166,255,.2);background:rgba(88,166,255,.04);font-size:.78rem;color:var(--text-secondary);line-height:1.8}
@@ -146,9 +149,32 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
     .calc-grid{padding:0 1rem}
     .section-card{padding:1.25rem 1.25rem}
 }
+
+/* Reduced Motion */
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+/* Print */
+@media print{
+    .header,.toast,.theme-toggle,.back-link,.hero-badges{display:none!important}
+    body{background:#fff;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .hero{padding:1rem 0;border-bottom:1px solid #ddd}
+    .hero h2 span{-webkit-text-fill-color:#111;color:#111}
+    .calc-grid{grid-template-columns:1fr 1fr}
+    .section-card{border-color:#ddd;box-shadow:none;break-inside:avoid}
+    .chart-row .cr-bar .bar-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+/* Touch hover fix */
+@media(hover:none){
+    .section-card:hover{box-shadow:var(--shadow-sm)}
+}
     </style>
 </head>
 <body>
+<a href="#calc-content" class="skip-link" style="position:absolute;top:-100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:.5rem 1.5rem;border-radius:0 0 8px 8px;font-size:.8rem;font-weight:600;z-index:9999;transition:top .2s">Skip to content</a>
+<style>.skip-link:focus{top:0!important}</style>
 <div class="header">
     <div class="header-inner">
         <a class="header-brand" href="#">
@@ -269,7 +295,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 
 <div id="verdict" class="verdict" style="max-width:1200px;display:none"></div>
 
-<div class="calc-grid">
+<div class="calc-grid" id="calc-content">
     <div class="section-card legacy">
         <h3><span style="color:var(--purple)">&#9632;</span> Legacy VMware (Perpetual + SnS)</h3>
         <div id="legacyCosts"></div>
@@ -328,6 +354,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color
 
 <footer class="footer">
     <p>Built by <a href="https://mustafamalqadi.github.io/">Eng. Mustafa Al-Qadi</a> &mdash; VCF Licensing Cost Calculator &mdash; For educational and planning purposes only</p>
+    <p style="margin-top:.5rem"><a href="https://mustafamalqadi.github.io/vmware-kbs/">Knowledge Bases</a> &nbsp;&bull;&nbsp; <a href="https://mustafamalqadi.github.io/vmware-upgrade-path/">Upgrade Planner</a> &nbsp;&bull;&nbsp; <a href="https://mustafamalqadi.github.io/training-courses/">Training Courses</a></p>
 </footer>
 
 <div class="toast" id="toast"></div>
