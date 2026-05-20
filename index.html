@@ -243,7 +243,7 @@ body{font-family:'Cairo','Inter',system-ui,sans-serif;background:var(--bg-primar
         <div class="header-actions">
             <a class="back-link" href="https://mustafamalqadi.github.io/">&#8592; Home</a>
             <a class="back-link" href="https://mustafamalqadi.github.io/vmware-kbs/">KB Portal</a>
-            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">&#127769;</button>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle dark mode" aria-pressed="true">&#127769;</button>
         </div>
     </div>
 </div>
@@ -347,14 +347,14 @@ body{font-family:'Cairo','Inter',system-ui,sans-serif;background:var(--bg-primar
             <label>Min. Cores per CPU</label>
             <select id="minCores" onchange="calculate()">
                 <option value="16" selected>16 (Broadcom minimum)</option>
-                <option value="0">Use actual core count</option>
+                <option value="0">Theoretical only — Broadcom enforces 16-core minimum</option>
             </select>
             <span class="input-hint">Broadcom charges min 16 cores/socket</span>
         </div>
     </div>
 </div>
 
-<div id="verdict" class="verdict" style="max-width:1200px;display:none"></div>
+<div id="verdict" class="verdict" role="status" aria-live="polite" style="max-width:1200px;display:none"></div>
 
 <div class="calc-grid" id="calc-content">
     <div class="section-card legacy">
@@ -625,8 +625,10 @@ function calculate() {
 // ---- Theme ----
 window.toggleTheme = function() {
     var html = document.documentElement;
+    var btn = document.getElementById('themeToggle');
     var current = html.getAttribute('data-theme');
     html.setAttribute('data-theme', current === 'light' ? '' : 'light');
+    btn.setAttribute('aria-pressed', current === 'light' ? 'true' : 'false');
     localStorage.setItem('vcf-calc-theme', current === 'light' ? 'dark' : 'light');
     localStorage.setItem('global-theme', current === 'light' ? 'dark' : 'light');
 };
@@ -634,7 +636,10 @@ window.toggleTheme = function() {
 // Load theme
 (function() {
     var saved = localStorage.getItem('vcf-calc-theme') || localStorage.getItem('global-theme');
-    if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.getElementById('themeToggle').setAttribute('aria-pressed', 'false');
+    }
 })();
 
 // Persist form inputs
