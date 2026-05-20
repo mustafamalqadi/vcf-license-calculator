@@ -207,7 +207,7 @@ body{font-family:'Cairo','Inter',system-ui,sans-serif;background:var(--bg-primar
     </style>
 </head>
 <body>
-<a href="#calc-content" class="skip-link" style="position:absolute;top:-100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:.5rem 1.5rem;border-radius:0 0 8px 8px;font-size:.8rem;font-weight:600;z-index:9999;transition:top .2s">Skip to content</a>
+<a href="#main-content" class="skip-link" style="position:absolute;top:-100px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:.5rem 1.5rem;border-radius:0 0 8px 8px;font-size:.8rem;font-weight:600;z-index:9999;transition:top .2s">Skip to content</a>
 <style>.skip-link:focus{top:0!important}
 .site-strip{position:sticky;top:0;z-index:110;background:rgba(5,8,18,.92);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:.35rem 2rem;display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:.7rem}
 .site-strip a{color:var(--text-muted);text-decoration:none;font-weight:500;display:flex;align-items:center;gap:.3rem;padding:.2rem .5rem;border-radius:6px;transition:all .2s}
@@ -240,14 +240,14 @@ body{font-family:'Cairo','Inter',system-ui,sans-serif;background:var(--bg-primar
         <div class="header-actions">
             <a class="back-link" href="https://mustafamalqadi.github.io/">&#8592; Home</a>
             <a class="back-link" href="https://mustafamalqadi.github.io/vmware-kbs/">KB Portal</a>
-            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">&#127769;</button>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">&#127769;</button>
         </div>
     </div>
 </div>
 
 <main id="main-content">
 <section class="hero">
-    <h2>VMware Licensing <span>Cost Comparison</span></h2>
+    <h1>VMware Licensing <span>Cost Comparison</span></h1>
     <p>Compare legacy VMware perpetual per-socket licensing vs. Broadcom's new per-core subscription model (VCF/VVF). Understand the true TCO impact.</p>
     <div class="hero-badges">
         <span class="hero-badge">Per-Socket vs Per-Core</span>
@@ -651,8 +651,8 @@ calculate();
 <script>
 (function(){var items=[{label:'Portfolio',url:'https://mustafamalqadi.github.io/',hint:'Home'},{label:'Knowledge Bases',url:'https://mustafamalqadi.github.io/vmware-kbs/',hint:'KB Hub'},{label:'Training Courses',url:'https://mustafamalqadi.github.io/training-courses/',hint:'Courses'},{label:'Upgrade Planner',url:'https://mustafamalqadi.github.io/vmware-upgrade-path/',hint:'VMware tool'},{label:'License Calculator',url:'#',hint:'Current page'}];var overlay=document.getElementById('cmdOverlay'),input=document.getElementById('cmdInput'),results=document.getElementById('cmdResults');var activeIdx=-1;function open(){overlay.classList.add('open');input.value='';render('');input.focus();activeIdx=-1;}function close(){overlay.classList.remove('open');}function render(q){var f=items.filter(function(i){return!q||i.label.toLowerCase().indexOf(q)!==-1;});results.innerHTML=f.map(function(i,idx){return'<div class="cmd-item'+(idx===activeIdx?' active':'')+' " data-url="'+i.url+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg><span class="cmd-label">'+i.label+'</span><span class="cmd-hint">'+i.hint+'</span></div>';}).join('');}input.addEventListener('input',function(){activeIdx=-1;render(this.value.toLowerCase().trim());});results.addEventListener('click',function(e){var el=e.target.closest('.cmd-item');if(el){close();window.location.href=el.dataset.url;}});overlay.addEventListener('click',function(e){if(e.target===overlay)close();});document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();overlay.classList.contains('open')?close():open();}if(e.key==='Escape'&&overlay.classList.contains('open'))close();if(overlay.classList.contains('open')&&(e.key==='ArrowDown'||e.key==='ArrowUp')){e.preventDefault();var els=results.querySelectorAll('.cmd-item');if(e.key==='ArrowDown')activeIdx=Math.min(activeIdx+1,els.length-1);else activeIdx=Math.max(activeIdx-1,0);els.forEach(function(el,i){el.classList.toggle('active',i===activeIdx);});}if(e.key==='Enter'&&overlay.classList.contains('open')){var a=results.querySelector('.cmd-item.active');if(a){close();window.location.href=a.dataset.url;}}});})();
 </script>
-<div class="offline-bar" id="offlineBar">You are offline — cached content is being shown</div>
-<script>(function(){var bar=document.getElementById('offlineBar');window.addEventListener('offline',function(){bar.classList.add('show');});window.addEventListener('online',function(){bar.classList.remove('show');});if(!navigator.onLine)bar.classList.add('show');})();</script>
+<div class="offline-bar" id="offlineBar" hidden>You are offline — cached content is being shown</div>
+<script>(function(){var bar=document.getElementById('offlineBar');function show(){bar.hidden=false;bar.classList.add('show');}function hide(){bar.classList.remove('show');bar.hidden=true;}window.addEventListener('offline',show);window.addEventListener('online',hide);if(!navigator.onLine)show();})();</script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');</script>
 <script>if(document.startViewTransition){
   document.querySelectorAll('.site-strip a:not(.current)').forEach(function(a){
